@@ -125,6 +125,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	POINT mouse_position;
+	RECT client_rectangle;
     switch (message)
     {
     case WM_COMMAND:
@@ -148,13 +150,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             PAINTSTRUCT paint_struct;
             HDC canvas = BeginPaint(hWnd, &paint_struct);
-            // TODO: Add any drawing code that uses hdc here...
 			game.draw(canvas, paint_struct);
-			
-
             EndPaint(hWnd, &paint_struct);
+			
         }
         break;
+	case WM_LBUTTONDOWN:
+		
+		SetCapture(hWnd);
+		mouse_position.x = LOWORD(lParam);
+		mouse_position.y = HIWORD(lParam);
+		game.left_button_down(mouse_position);
+		RedrawWindow(hWnd, 0, 0, RDW_INVALIDATE);
+		break;
+	case WM_LBUTTONUP:
+		ReleaseCapture();
+		break;
     case WM_DESTROY:
         PostQuitMessage(0);
         break;

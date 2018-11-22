@@ -18,3 +18,12 @@ void Game::draw(HDC canvas, PAINTSTRUCT paint_struct)
 	FillRect(canvas, &paint_struct.rcPaint, background_colour);
 	this->board.draw(canvas);
 }
+
+void Game::left_button_down(POINT mouse_position)
+{
+	this->board.left_button_down(mouse_position);
+}
+
+void Game::left_button_up(POINT mouse_position)
+{
+}

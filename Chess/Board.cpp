@@ -44,6 +44,11 @@ Board::~Board()
 {
 }
 
+//
+//	FUNCTION: draw(HDC)
+//	
+//	PURPOSE: Drawing the board to the screen.
+//
 void Board::draw(HDC canvas)
 {
 	for (std::vector<Tile> row : this->tiles) {
@@ -51,4 +56,17 @@ void Board::draw(HDC canvas)
 			tile.draw(canvas);
 		}
 	}
+}
+
+void Board::left_button_down(POINT mouse_position)
+{
+	for (int i = 0; i < this->tiles.size(); i++) {
+		for (int j = 0; j < this->tiles.at(i).size(); j++) {
+			tiles.at(i).at(j).left_button_down(mouse_position);
+		}
+	}
+}
+
+void Board::left_button_up(POINT mouse_position)
+{
 }
