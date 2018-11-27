@@ -2,10 +2,10 @@
 #include "Tile.h"
 
 
-Tile::Tile(int x, int y, int colour)
+Tile::Tile(POINT pos, int colour)
 {
-	this->x = x;
-	this->y = y;
+	this->pos.x = pos.x;
+	this->pos.y = pos.y;
 	this->colour = colour;
 }
 
@@ -36,10 +36,10 @@ void Tile::draw(HDC canvas)
 
 	//defines the rectangle to be drawn for this tile
 	RECT tile;
-	tile.left = this->x;
-	tile.top = this->y;
-	tile.bottom = this->y + Tile::SIZE;
-	tile.right = this->x + Tile::SIZE;
+	tile.left = this->pos.x;
+	tile.top = this->pos.y;
+	tile.bottom = this->pos.y + Tile::SIZE;
+	tile.right = this->pos.x + Tile::SIZE;
 
 	//draws the rectangle to the canvas
 	FillRect(canvas, &tile, colour);
@@ -48,28 +48,56 @@ void Tile::draw(HDC canvas)
 	DeleteObject(colour);
 }
 
-void Tile::left_button_down(POINT mouse_position)
+bool Tile::isOn(POINT point)
 {
-	if (isOn(mouse_position)) {
+	return point.x > this->pos.x && point.x < this->pos.x + Tile::SIZE && point.y > this->pos.y && point.y < this->pos.y + Tile::SIZE;
+}
+
+void Tile::press(POINT mouse, Piece* held)
+{
+	if (isOn(mouse)) {
+		if (piece != NULL) {
+			piece->press(mouse);
+			held = piece;
+		}
 		if (this->colour == 0) {
 			this->colour = 2;
-		}else if (this->colour == 1) {
+		}
+		else if (this->colour == 1) {
 			this->colour = 3;
-		}else if (this->colour == 2) {
+		}
+		else if (this->colour == 2) {
 			this->colour = 0;
-		}else if (this->colour == 3) {
+		}
+		else if (this->colour == 3) {
 			this->colour = 1;
 		}
 	}
+		
 }
 
-void Tile::left_button_up(POINT mouse_position)
-{
+
+POINT Tile::getPos() {
+	return this->pos;
 }
 
-bool Tile::isOn(POINT point)
+bool Tile::addPiece(Piece * piece)
 {
-	return point.x > this->x && point.x < this->x + Tile::SIZE && point.y > this->y && point.y < this->y + Tile::SIZE;
+	if (this->piece == NULL) {
+		this->piece = piece;
+		return true;
+	}
+	return false;
+}
+
+void Tile::setPiece(Piece * piece)
+{
+	this->piece = piece;
+}
+
+Piece* Tile::getPiece()
+{
+	return this->piece;
 }
 
 

@@ -4,7 +4,13 @@
 
 Game::Game()
 {
-	this->board = Board();
+	int x;
+	int y;
+	int n;
+	unsigned char * rook_image = stbi_load("Rook.png", &x, &y, &n, 0);
+	std::map<std::string, unsigned char *> images;
+	images.insert(std::pair<std::string, unsigned char *>("Rook", rook_image));
+	this->board = Board(images);
 }
 
 
@@ -21,7 +27,7 @@ void Game::draw(HDC canvas, PAINTSTRUCT paint_struct)
 
 void Game::left_button_down(POINT mouse_position)
 {
-	this->board.left_button_down(mouse_position);
+	this->board.press(mouse_position);
 }
 
 void Game::left_button_up(POINT mouse_position)

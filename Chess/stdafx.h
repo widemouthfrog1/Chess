@@ -19,4 +19,7 @@
 
 
 // reference additional headers your program requires here
-#include<vector>
+#include <vector>
+#include <map>
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
