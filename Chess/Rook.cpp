@@ -2,10 +2,11 @@
 #include "Rook.h"
 
 
-Rook::Rook(unsigned char ** image_address, bool white)
+Rook::Rook(std::shared_ptr<Image> image, bool white, POINT pos)
 {
-	this->image = image_address;
+	this->image = image;
 	this->white = white;
+	this->pos = pos;
 }
 
 
@@ -14,10 +15,14 @@ Rook::~Rook()
 }
 
 void Piece::move(Tile before, Tile after) {
+	before.setPiece(NULL);
+	after.setPiece(shared_from_this());
 }
 
-void Piece::draw(HDC canvas) {
-	
+void Piece::draw(Graphics* canvas) {
+	UINT width = this->image->GetWidth();
+	UINT height = this->image->GetHeight();
+	canvas->DrawImage(&(*(this->image)), this->pos.x, this->pos.y, Tile::SIZE, Tile::SIZE);
 }
 
 

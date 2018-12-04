@@ -28,7 +28,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(lpCmdLine);
 
     // TODO: Place code here.
-
+	GdiPlusInit gdiplus;
     // Initialize global strings
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_CHESS, szWindowClass, MAX_LOADSTRING);
@@ -101,12 +101,11 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
       CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
-
    if (!hWnd)
    {
       return FALSE;
    }
-
+   game.load_images();
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
 
@@ -125,8 +124,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	HDC hdc;
+	PAINTSTRUCT paint_struct;
 	POINT mouse_position;
-	RECT client_rectangle;
     switch (message)
     {
     case WM_COMMAND:
@@ -148,9 +148,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     case WM_PAINT:
         {
-            PAINTSTRUCT paint_struct;
-            HDC canvas = BeginPaint(hWnd, &paint_struct);
+            
+            hdc = BeginPaint(hWnd, &paint_struct);
+			Graphics graphics(hdc);
+			Graphics* canvas = &graphics;
 			game.draw(canvas, paint_struct);
+			//int c = 0;
+			//Color colour;
+			//if (c == 3) {
+			//	colour = Color(240, 255, 0);
+			//}
+			//else if (c == 2) {
+				//colour = Color(130, 155, 255);
+			//}
+			//else if (c) {
+				//colour = Color(255, 255, 255);
+			//}
+			//else {
+				//colour = Color(0, 0, 0);
+			//}
+			//canvas->FillRectangle(&SolidBrush(colour), 100, 100, Tile::SIZE, Tile::SIZE);
             EndPaint(hWnd, &paint_struct);
 			
         }
@@ -160,13 +177,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		SetCapture(hWnd);
 		mouse_position.x = LOWORD(lParam);
 		mouse_position.y = HIWORD(lParam);
-		game.left_button_down(mouse_position);
+		game.press(mouse_position);
 		RedrawWindow(hWnd, 0, 0, RDW_INVALIDATE);
 		break;
+	case WM_MOUSEMOVE:
+		switch (wParam) {
+		case MK_LBUTTON:
+			SetCapture(hWnd);
+			mouse_position.x = LOWORD(lParam);
+			mouse_position.y = HIWORD(lParam);
+			game.drag(mouse_position);
+			RedrawWindow(hWnd, 0, 0, RDW_INVALIDATE);
+			break;
+		}
 	case WM_LBUTTONUP:
 		ReleaseCapture();
 		break;
     case WM_DESTROY:
+		game.~Game();//destroy game and everything in it before shutting Gdiplus down.
         PostQuitMessage(0);
         break;
     default:

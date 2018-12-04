@@ -13,6 +13,8 @@
 
 // C RunTime Header Files
 #include <stdlib.h>
+#include <stdio.h>
+#include <iostream>
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
@@ -21,5 +23,10 @@
 // reference additional headers your program requires here
 #include <vector>
 #include <map>
+#include <memory>
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#include <objidl.h>
+#include <gdiplus.h>
+using namespace Gdiplus;
+#pragma comment(lib,"gdiplus.lib")

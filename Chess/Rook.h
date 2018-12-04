@@ -5,7 +5,7 @@ class Rook :
 	
 {
 public:
-	Rook(unsigned char ** image_address, bool white);
+	Rook(std::shared_ptr<Image> image_address, bool white, POINT pos);
 	~Rook();
 };
 

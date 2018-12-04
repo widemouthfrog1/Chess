@@ -1,13 +1,16 @@
 #pragma once
 #include "Board.h"
+#include "ImageLoader.h"
 class Game
 {
 	Board board = Board();
 public:
 	Game();
 	~Game();
-	void draw(HDC canvas, PAINTSTRUCT paint_struct);
-	void left_button_down(POINT mouse_position);
-	void left_button_up(POINT mouse_position);
+	void draw(Graphics* canvas, PAINTSTRUCT paint_struct);
+	void press(POINT mouse);
+	void drag(POINT mouse);
+	void release(POINT mouse);
+	void load_images();
 };
 

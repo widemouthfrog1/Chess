@@ -1,11 +1,13 @@
 #pragma once
 #include "Piece.h"
 
+class Piece;
+
 class Tile
 {
 	int colour;
 	POINT pos;
-	Piece* piece;
+	std::shared_ptr<Piece> piece;
 public:
 	const static int SIZE = 50;
 	const static int EMPTY = -1;
@@ -13,12 +15,12 @@ public:
 	Tile(POINT pos, int colour);
 	~Tile();
 
-	void draw(HDC canvas);
+	void draw(Graphics* canvas);
 	bool isOn(POINT point);
-	void press(POINT mouse, Piece* held);
+	void press(POINT mouse, std::shared_ptr<Piece>* held);
 	POINT getPos();
-	bool addPiece(Piece* piece);
-	void setPiece(Piece* piece);
-	Piece* getPiece();
+	bool addPiece(std::shared_ptr<Piece> piece);
+	void setPiece(std::shared_ptr<Piece> piece);
+	std::shared_ptr<Piece> getPiece();
 };
 
